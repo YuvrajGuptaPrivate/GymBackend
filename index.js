@@ -634,6 +634,29 @@ app.put("/client/reset-password/:email", async (req, res) => {
     }
   });
 
+  // GET /attendance/:adminId?date=YYYY-MM-DD
+app.get("/attendance/:adminId", async (req, res) => {
+    try {
+        const { adminId } = req.params;
+        const { date } = req.query; // Date should be passed as a query parameter
+
+        if (!date) {
+            return res.status(400).json({ message: "Date parameter is required" });
+        }
+
+        const attendanceRecords = await Attendance.find({ adminId, date });
+
+        if (!attendanceRecords.length) {
+            return res.status(404).json({ message: "No attendance records found" });
+        }
+
+        res.json({ success: true, data: attendanceRecords });
+    } catch (error) {
+        res.status(500).json({ message: "Server Error", error: error.message });
+    }
+
+});
+
 app.listen(PORT, () => {
   console.log(`✅ Server is running on http://localhost:${PORT}`);
 });
