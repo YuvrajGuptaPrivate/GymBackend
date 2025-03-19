@@ -205,15 +205,16 @@ app.post("/attendance/mark-attendance", async (req, res) =>{
             return res.status(404).json({ message: 'No clients found for this Gym Owner' });
         }
 
-        //  Ensure the date is stored correctly (only YYYY-MM-DD)
-        const date = new Date();
-        date.setHours(0, 0, 0, 0); // Remove time
+    
+        const today = new Date();
+const formattedDate = today.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+
 
         //  Prepare attendance records
         const attendanceRecords = allClients.map(client => ({
             clientId: client._id,
             adminId,
-            date,
+            date: formattedDate, // String date
             status: 'Absent' // Default status
         }));
 
