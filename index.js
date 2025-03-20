@@ -149,7 +149,7 @@ app.post("/add-client", async (req, res) => {
 //creating single attendance record for a specific date
 app.post("/attendance", async (req, res) =>{
     try {
-        const { clientId, adminId, date, status } = req.body;
+        const { clientId, adminId, date, status, clientname} = req.body;
 
         // Validate required fields
         if (!clientId || !adminId || !date || !status) {
@@ -173,7 +173,8 @@ app.post("/attendance", async (req, res) =>{
             clientId,
             adminId,
             date,
-            status
+            status,
+            clientname
         });
 
         await attendance.save();
@@ -215,7 +216,8 @@ const formattedDate = today.toISOString().split('T')[0]; // 'YYYY-MM-DD'
             clientId: client._id,
             adminId,
             date: formattedDate, // String date
-            status: 'Absent' // Default status
+            status: 'Absent',
+            clientname: client.name
         }));
 
         //  Insert all attendance records in bulk
@@ -237,7 +239,7 @@ const formattedDate = today.toISOString().split('T')[0]; // 'YYYY-MM-DD'
 // add a new payment
 app.post("/add-payment", async (req, res) => {
     try {
-        const { paymentId, clientId, adminId, amountPaid, totalAmount, dueAmount, nextDueDate, paymentMode, transactionId, status, notes } = req.body;
+        const { paymentId, clientId, adminId, amountPaid, totalAmount, dueAmount, nextDueDate, paymentMode, transactionId, status, clientname } = req.body;
 
         const newPayment = new Payment({
             paymentId,
@@ -250,7 +252,7 @@ app.post("/add-payment", async (req, res) => {
             paymentMode,
             transactionId,
             status,
-            notes
+            clientname
         });
 
         await newPayment.save();
