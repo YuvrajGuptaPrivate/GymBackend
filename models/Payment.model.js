@@ -20,7 +20,7 @@ const paymentSchema = new mongoose.Schema({
         enum: ["Completed", "Pending", "Failed"], 
         default: "Completed" 
     }, // Payment Status
-    notes: { type: String, default: "" } // Additional Notes
+    clientname: { type: String, default: "" } // Additional Notes
 });
 
 const Payment = mongoose.model("Payment", paymentSchema);
