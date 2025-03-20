@@ -200,7 +200,7 @@ app.post("/attendance/mark-attendance", async (req, res) =>{
         }
 
         //  Fetch all clients under this Gym Owner
-        const allClients = await Client.find({ adminId }).select('_id');
+        const allClients = await Client.find({ adminId }).select('_id name');
 
         if (allClients.length === 0) {
             return res.status(404).json({ message: 'No clients found for this Gym Owner' });
