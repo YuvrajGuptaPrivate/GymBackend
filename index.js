@@ -396,7 +396,7 @@ app.patch('/attendance/update', async (req, res) => {
 
         res.json({
             message: "Attendance updated successfully",
-            updatedAttendance
+            attendance: updatedAttendance
         });
     } catch (error) {
         res.status(500).json({ message: "Internal server error", error });
