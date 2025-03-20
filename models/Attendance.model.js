@@ -19,7 +19,8 @@ const attendanceSchema = new mongoose.Schema({
         type: String,
         enum: ['Present', 'Absent'],
         required: true
-    }
+    },
+    clientname: { type: String, required: true}
 });
 
 const Attendance = mongoose.model('Attendance', attendanceSchema);
