@@ -288,7 +288,7 @@ app.delete("/cleanup", async (req, res) => {
 app.get("/get-payments/admin/:adminId", async (req, res) => {
     try {
         const { adminId } = req.params;
-        const payments = await Payment.find({ adminId }).populate("clientId", "name email");
+        const payments = await Payment.find({ adminId });
 
         if (!payments.length) {
             return res.status(404).json({ success: false, message: "No payments found for this admin." });
