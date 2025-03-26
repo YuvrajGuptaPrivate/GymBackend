@@ -158,7 +158,7 @@ app.post("/add-client", async (req, res) => {
         await session.commitTransaction();
         session.endSession();
 
-        res.status(201).json({ message: "Client and attendance added successfully", client: newClient, attendance });
+        res.status(201).json({ message: "Client and attendance added successfully", attendance });
     } catch (error) {
         await session.abortTransaction();
         session.endSession();
