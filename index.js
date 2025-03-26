@@ -121,26 +121,47 @@ app.put("/admin/:adminId", async (req, res) => {
     }
 });
 
-
-//creating client
+//ading client
 app.post("/add-client", async (req, res) => {
     const { adminId, name, email, phone, password, dateOfJoining, paymentType, paymentStatus } = req.body;
 
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
     try {
-        // Check if adminId exists in the admins collection
-        const adminExists = await Admin.findById(adminId);
+        // Check if admin exists
+        const adminExists = await Admin.findById(adminId).session(session);
         if (!adminExists) {
+            await session.abortTransaction();
+            session.endSession();
             return res.status(400).json({ message: "Invalid adminId. Admin does not exist." });
         }
 
-        // Hash the password before storing it
+        // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
-        // Create and save the new client
+
+        // Create client
         const newClient = new Client({ adminId, name, email, phone, password: hashedPassword, dateOfJoining, paymentType, paymentStatus });
-        await newClient.save();
-        
-        res.status(201).json({ message: "Client added successfully", client: newClient });
+        await newClient.save({ session });
+
+        // Create attendance record for the client
+        const attendance = new Attendance({
+            clientId: newClient._id,
+            adminId,
+            date: new Date().toISOString().split("T")[0], // Format: YYYY-MM-DD
+            status: "Present", // Default status
+            clientname: name
+        });
+        await attendance.save({ session });
+
+        // Commit the transaction
+        await session.commitTransaction();
+        session.endSession();
+
+        res.status(201).json({ message: "Client and attendance added successfully", client: newClient, attendance });
     } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
         res.status(500).json({ message: "Server error", error });
     }
 });
