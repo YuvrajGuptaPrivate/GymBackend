@@ -596,7 +596,7 @@ app.get("/get-all-attendance/:clientId", async (req, res) => {
         return res.status(404).json({ message: "No attendance records found" });
       }
   
-      res.json(records);
+        res.json({ success: true, data: records }); // ✅ Wrap response in an object
     } catch (error) {
       res.status(500).json({ error: "Server error" });
     }
