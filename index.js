@@ -30,7 +30,7 @@ const app = express();
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("🏋️ Gym API is Running...");
+  res.send(" Gym API is Running...");
 });
 
 
@@ -42,21 +42,21 @@ app.post("/add-admins", async (req, res) => {
             return res.status(400).json({ message: "Password is required" });
         }
 
-        // Hash password before saving
+        // Hash password 
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Create admin with only required fields & default values for others
+        // Create admin
         const admin = new Admin({
-            AdminName: "New Admin", // Default name
+            AdminName: "New Admin", 
             email,
             password: hashedPassword,
             mobile_Number,
-            bussiness_name: "Your Business", // Default business name
-            address: "Not Set" // Default address
+            bussiness_name: "Your Business", 
+            address: "Not Set" 
         });
 
-        await admin.save(); // Save admin to the database
+        await admin.save(); // Save admin
 
         res.status(201).json({ message: "Admin created successfully", admin });
     } catch (error) {
@@ -65,17 +65,16 @@ app.post("/add-admins", async (req, res) => {
 });
 
 
-//fetch admin data by giving admin id
+//fetch admin data by  admin id
 app.get("/admin/:adminId", async (req, res) => {
-    const { adminId } = req.params; // Extract adminId from URL
-
+    const { adminId } = req.params; 
     try {
         if (!adminId) {
             return res.status(400).json({ message: "Admin ID is required" });
         }
 
         // Find the admin by adminId
-        const admin = await Admin.findById(adminId).select("-password"); // Exclude password from response
+        const admin = await Admin.findById(adminId).select("-password");
 
         if (!admin) {
             return res.status(404).json({ message: "Admin not found" });
@@ -91,8 +90,8 @@ app.get("/admin/:adminId", async (req, res) => {
 
 //update admin details 
 app.put("/admin/:adminId", async (req, res) => {
-    const { adminId } = req.params; // Extract adminId from URL
-    const updateData = req.body; // Extract update fields from request body
+    const { adminId } = req.params; 
+    const updateData = req.body; 
 
     try {
         if (!adminId) {
@@ -106,9 +105,9 @@ app.put("/admin/:adminId", async (req, res) => {
         // Find the admin and update only the provided fields
         const updatedAdmin = await Admin.findByIdAndUpdate(
             adminId,
-            { $set: updateData }, // Update only the given fields
-            { new: true, runValidators: true } // Return updated document & apply validations
-        ).select("-password"); // Exclude password from response
+            { $set: updateData }, 
+            { new: true, runValidators: true } 
+        ).select("-password"); 
 
         if (!updatedAdmin) {
             return res.status(404).json({ message: "Admin not found" });
@@ -148,8 +147,8 @@ app.post("/add-client", async (req, res) => {
         const attendance = new Attendance({
             clientId: newClient._id,
             adminId,
-            date: new Date().toISOString().split("T")[0], // Format: YYYY-MM-DD
-            status: "Present", // Default status
+            date: new Date().toISOString().split("T")[0], 
+            status: "Present", 
             clientname: name
         });
         await attendance.save({ session });
@@ -229,7 +228,7 @@ app.post("/attendance/mark-attendance", async (req, res) =>{
 
     
         const today = new Date();
-const formattedDate = today.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+const formattedDate = today.toISOString().split('T')[0]; 
 
 
         //  Prepare attendance records
